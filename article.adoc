@@ -5,8 +5,10 @@ You know what would be fun? Running 1 Billion soap invocations through CXF!
 == The Setup
 
 
+
 == The Performance Harness
 
+image::./assets/images/Apache-CXF-Perf-Harness.png[alt=POWER,width=480,height=640,align="center"]
 
 === How it works
 

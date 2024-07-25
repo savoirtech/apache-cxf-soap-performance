@@ -7,6 +7,10 @@ CXF!
 
 # The Performance Harness
 
+<figure>
+<img src="./assets/images/Apache-CXF-Perf-Harness.png" alt="POWER" />
+</figure>
+
 ## How it works
 
 # Lets get this test case running
