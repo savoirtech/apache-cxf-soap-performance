@@ -5,6 +5,10 @@ CXF!
 
 # The Setup
 
+<figure>
+<img src="./assets/images/HardwareSetup.png" alt="POWER" />
+</figure>
+
 # The Performance Harness
 
 <figure>
@@ -12,6 +16,10 @@ CXF!
 </figure>
 
 ## How it works
+
+<figure>
+<img src="./assets/images/SoapInvocations.png" alt="POWER" />
+</figure>
 
 # Lets get this test case running
 

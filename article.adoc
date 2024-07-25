@@ -4,7 +4,7 @@ You know what would be fun? Running 1 Billion soap invocations through CXF!
 
 == The Setup
 
-
+image::./assets/images/HardwareSetup.png[alt=POWER,width=480,height=640,align="center"]
 
 == The Performance Harness
 
@@ -12,6 +12,7 @@ image::./assets/images/Apache-CXF-Perf-Harness.png[alt=POWER,width=480,height=64
 
 === How it works
 
+image::./assets/images/SoapInvocations.png[alt=POWER,width=480,height=640,align="center"]
 
 == Lets get this test case running
 
