@@ -4,7 +4,7 @@ You know what would be fun? Running 1 Billion soap invocations through CXF!
 
 == The Setup
 
-image::./assets/images/HardwareSetup.png[alt=POWER,width=480,height=640,align="center"]
+image::./assets/images/HardwareSetup.png[alt=Hardware,width=480,height=640,align="center"]
 
 For our lab test we'll be using the following hardware:
 
@@ -23,7 +23,7 @@ The machines are co-located on the same switch, reducing the number of packet ho
 
 As of CXF 4.1 the binary distribution will contain a set of performance scripts in the samples folder. Options to test JAX-WS and JAX-RS are present.
 
-image::./assets/images/Apache-CXF-Perf-Harness.png[alt=POWER,width=480,height=640,align="center"]
+image::./assets/images/Apache-CXF-Perf-Harness.png[alt=Perf,width=480,height=640,align="center"]
 
 At its core, the performance harness is a client-server request/response automation. On startup the script initializes and warms up the JVM for executing mass calls.
 
@@ -31,25 +31,41 @@ At its core, the performance harness is a client-server request/response automat
 
 The client host runs a number of threads, each running a CXF client which invokes up the server host. For JAX-WS testing, we have a choice of invoking on DocPortType as String, Base64, or as a ComplexType. The client side harness will run N threads for M invocations for a duration of time.
 
-image::./assets/images/SoapInvocations.png[alt=POWER,width=480,height=640,align="center"]
+image::./assets/images/SoapInvocations.png[alt=Soap,width=480,height=640,align="center"]
 
 Once the time duration has been met, it will cease the executing clients, and tabulate the total invocations.
 
 == Lets get this test case running
 
-To run the performance harness we change directory into samples/performance.
+To run the performance harness we change directory into samples.
 Within this folder we'll build the base harness and the various scenarios.
+
+On each host we will open a terminal to the CXF distribution samples folder.
 
 [,bash,linenum]
 ----
-$ cd samples/performance
+$ cd samples
 $ mvn clean install
+$ cd performance/soap_http_doc_lit
 ----
 
-For the purposes of our lab test, we'll configure the test to use 100 clients, over a period of 8 hours (60 x 60 x 8 = 28800 seconds).
+On the Server host we'll execute the following maven profile:
+
+[,bash,linenum]
+----
+$mvn -Pserver -Dhost=0.0.0.0 -Dprotocol=http
+----
+
+On the Client host we'll execute the client profile, supplying instructions to use HTTP protocol, echoComplexTypeDoc operation, use 100 threads (simulate 100 clients), over a time of 8 hours (60 x 60 x 8 = 28800 seconds).
+
+[,bash,linenum]
+----
+$mvn -Pclient -Dhost=192.168.50.154 -Dprotocol=http -Doperation=echoComplexTypeDoc -Dthreads=100 -Dtime=28800
+----
+
+For the purposes of our lab test, we'll allow the suite to execute without added agents to the JVM.
 
 == Results
-
 
 
 [,bash,linenum]
