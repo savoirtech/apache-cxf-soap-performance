@@ -6,7 +6,7 @@ CXF!
 # The Setup
 
 <figure>
-<img src="./assets/images/HardwareSetup.png" alt="POWER" />
+<img src="./assets/images/HardwareSetup.png" alt="Hardware" />
 </figure>
 
 For our lab test we’ll be using the following hardware:
@@ -37,7 +37,7 @@ scripts in the samples folder. Options to test JAX-WS and JAX-RS are
 present.
 
 <figure>
-<img src="./assets/images/Apache-CXF-Perf-Harness.png" alt="POWER" />
+<img src="./assets/images/Apache-CXF-Perf-Harness.png" alt="Perf" />
 </figure>
 
 At its core, the performance harness is a client-server request/response
@@ -53,7 +53,7 @@ client side harness will run N threads for M invocations for a duration
 of time.
 
 <figure>
-<img src="./assets/images/SoapInvocations.png" alt="POWER" />
+<img src="./assets/images/SoapInvocations.png" alt="Soap" />
 </figure>
 
 Once the time duration has been met, it will cease the executing
@@ -61,17 +61,35 @@ clients, and tabulate the total invocations.
 
 # Lets get this test case running
 
-To run the performance harness we change directory into
-samples/performance. Within this folder we’ll build the base harness and
-the various scenarios.
+To run the performance harness we change directory into samples. Within
+this folder we’ll build the base harness and the various scenarios.
+
+On each host we will open a terminal to the CXF distribution samples
+folder.
 
 ``` bash
-$ cd samples/performance
+$ cd samples
 $ mvn clean install
+$ cd performance/soap_http_doc_lit
 ```
 
-For the purposes of our lab test, we’ll configure the test to use 100
-clients, over a period of 8 hours (60 x 60 x 8 = 28800 seconds).
+On the Server host we’ll execute the following maven profile:
+
+``` bash
+$mvn -Pserver -Dhost=0.0.0.0 -Dprotocol=http
+```
+
+On the Client host we’ll execute the client profile, supplying
+instructions to use HTTP protocol, echoComplexTypeDoc operation, use 100
+threads (simulate 100 clients), over a time of 8 hours (60 x 60 x 8 =
+28800 seconds).
+
+``` bash
+$mvn -Pclient -Dhost=192.168.50.154 -Dprotocol=http -Doperation=echoComplexTypeDoc -Dthreads=100 -Dtime=28800
+```
+
+For the purposes of our lab test, we’ll allow the suite to execute
+without added agents to the JVM.
 
 # Results
 
