@@ -98,6 +98,8 @@ without added agents to the JVM.
 
 # LAB TIME!
 
+## *First Run*
+
 Our first iteration of this test resulted in 953,428,857 invocations in
 8 hours…​ 47 Million less than our goal of 1 Billion.
 
@@ -108,6 +110,8 @@ Overall AVG. response time: 3.0206780179299737 (ms)
 9.53428857E8 (invocations), running 2880001.5900000003 (sec)
 ============================================
 ```
+
+## *Second Run*
 
 On our second run we re-configure our JAVA_HOME to use Adoptium Eclipse
 Temurin 21 LTS and pass in the following arguments to the JVMs:
@@ -129,6 +133,8 @@ Overall AVG. response time: ??? (ms)
 ??? (invocations), running ??? (sec)
 ============================================
 ```
+
+## *Third Run*
 
 The first two test iterations used default CXF and JVM properties. On
 our third run lets pass in a simple CXF configuration to Client and

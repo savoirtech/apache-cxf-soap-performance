@@ -71,6 +71,7 @@ For the purposes of our lab test, we'll allow the suite to execute without added
 
 == LAB TIME!
 
+=== _First Run_
 Our first iteration of this test resulted in 953,428,857 invocations in 8 hours... 47 Million less than our goal of 1 Billion.
 
 [,bash,linenum]
@@ -82,6 +83,7 @@ Overall AVG. response time: 3.0206780179299737 (ms)
 ============================================
 ----
 
+=== _Second Run_
 On our second run we re-configure our JAVA_HOME to use Adoptium Eclipse Temurin 21 LTS and pass in the following arguments to the JVMs:
 
 [,bash,linenum]
@@ -103,6 +105,7 @@ Overall AVG. response time: ??? (ms)
 ============================================
 ----
 
+=== _Third Run_
 The first two test iterations used default CXF and JVM properties. On our third run lets pass in a simple CXF configuration to Client and Server JVMs to instruct them enable HTTP2 & AsyncHTTPConduit.
 
 client.xml
