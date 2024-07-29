@@ -1,6 +1,6 @@
 == Apache CXF SOAP Performance
 
-You know what would be fun? Running 1 Billion soap invocations through CXF!
+You know what would be fun? Attempting to run 1 Billion soap invocations through CXF in 8 hours!
 
 == The Setup
 
@@ -42,6 +42,10 @@ Within this folder we'll build the base harness and the various scenarios.
 
 On each host we will open a terminal to the CXF distribution samples folder.
 
+We'll ensure we have JAVA_HOME and MAVEN_HOME environment variables set.
+
+For our first run we'll use Adoptium Eclipse Temurin 17 LTS as Client and Server side JVM.
+
 [,bash,linenum]
 ----
 $ cd samples
@@ -67,14 +71,84 @@ For the purposes of our lab test, we'll allow the suite to execute without added
 
 == Results
 
+Our first iteration of this test resulted in 953,428,857 invocations in 8 hours... 47 Million less than our goal of 1 Billion.
 
+[,bash,linenum]
+----
+=============Overall Test Result============
+Overall Throughput: echoComplexTypeDoc 331.05150369031566 (invocations/sec)
+Overall AVG. response time: 3.0206780179299737 (ms)
+9.53428857E8 (invocations), running 2880001.5900000003 (sec)
+============================================
+----
+
+On our second run we re-configure our JAVA_HOME to use Adoptium Eclipse Temurin 21 LTS and pass in the following arguments to the JVMs:
+
+[,bash,linenum]
+----
+$mvn -Pserver -Dhost=0.0.0.0 -Dprotocol=http
+----
+[,bash,linenum]
+----
+$mvn -Pclient -Dhost=192.168.50.154 -Dprotocol=http -Doperation=echoComplexTypeDoc -Dthreads=100 -Dtime=28800
+----
+
+This resulted in:
 [,bash,linenum]
 ----
 =============Overall Test Result============
 Overall Throughput: echoComplexTypeDoc ??? (invocations/sec)
 Overall AVG. response time: ??? (ms)
-??? (invocations), running 2880000 (sec)
+??? (invocations), running ??? (sec)
 ============================================
+----
+
+The first two test iterations used default CXF and JVM properties. On our third run lets pass in a simple CXF configuration to Client and Server JVMs to instruct them enable HTTP2 & AsyncHTTPConduit.
+
+client.xml
+[,xml,linenum]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:cxf="http://cxf.apache.org/core"
+    xmlns:wsa="http://cxf.apache.org/ws/addressing"
+    xmlns:http="http://cxf.apache.org/transports/http/configuration"
+    xsi:schemaLocation="http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <http:conduit name="{http://apache.org/hello_world_soap_http}SoapPort.http-conduit">
+        <http:client DecoupledEndpoint="http://localhost:9990/decoupled_endpoint"/>
+    </http:conduit>
+    <cxf:bus>
+        <cxf:features>
+            <wsa:addressing/>
+        </cxf:features>
+    </cxf:bus>
+</beans>
+----
+server.xml
+[,xml,linenum]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:cxf="http://cxf.apache.org/core"
+    xmlns:wsa="http://cxf.apache.org/ws/addressing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <cxf:bus>
+        <cxf:features>
+            <wsa:addressing/>
+        </cxf:features>
+    </cxf:bus>
+</beans>
+----
+
+Reusing Adoptium Eclipse Temurin 21 LTS, we pass the following arguments to the JVMs:
+
+[,bash,linenum]
+----
+$mvn -Pserver -Dhost=0.0.0.0 -Dprotocol=http -DBUScfg=client.xml
+----
+[,bash,linenum]
+----
+$mvn -Pclient -Dhost=192.168.50.154 -Dprotocol=http -Doperation=echoComplexTypeDoc -Dthreads=100 -Dtime=28800 -DBUScfg=server.xml
 ----
 
 == Conclusion
