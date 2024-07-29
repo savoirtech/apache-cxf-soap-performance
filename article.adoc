@@ -69,7 +69,7 @@ $mvn -Pclient -Dhost=192.168.50.154 -Dprotocol=http -Doperation=echoComplexTypeD
 
 For the purposes of our lab test, we'll allow the suite to execute without added agents to the JVM.
 
-== Results
+== LAB TIME!
 
 Our first iteration of this test resulted in 953,428,857 invocations in 8 hours... 47 Million less than our goal of 1 Billion.
 
@@ -109,19 +109,20 @@ client.xml
 [,xml,linenum]
 ----
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:cxf="http://cxf.apache.org/core"
-    xmlns:wsa="http://cxf.apache.org/ws/addressing"
-    xmlns:http="http://cxf.apache.org/transports/http/configuration"
-    xsi:schemaLocation="http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <http:conduit name="{http://apache.org/hello_world_soap_http}SoapPort.http-conduit">
-        <http:client DecoupledEndpoint="http://localhost:9990/decoupled_endpoint"/>
-    </http:conduit>
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://cxf.apache.org/core
+    http://cxf.apache.org/schemas/core.xsd
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd">
+
     <cxf:bus>
-        <cxf:features>
-            <wsa:addressing/>
-        </cxf:features>
+        <cxf:properties>
+            <entry key="use.async.http.conduit" value="true"/>
+            <entry key="org.apache.cxf.transports.http2.enabled" value="true"/>
+        </cxf:properties>
     </cxf:bus>
+
 </beans>
 ----
 server.xml
@@ -129,29 +130,88 @@ server.xml
 ----
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:cxf="http://cxf.apache.org/core"
-    xmlns:wsa="http://cxf.apache.org/ws/addressing"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    xsi:schemaLocation="http://cxf.apache.org/core
+    http://cxf.apache.org/schemas/core.xsd
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd">
+
     <cxf:bus>
-        <cxf:features>
-            <wsa:addressing/>
-        </cxf:features>
+        <cxf:properties>
+            <entry key="use.async.http.conduit" value="true"/>
+            <entry key="org.apache.cxf.transports.http2.enabled" value="true"/>
+        </cxf:properties>
     </cxf:bus>
+
 </beans>
+----
+
+Before we can execute this iteration, we'll need to update the pom.xml to include a few more dependencies:
+
+[,xml,linenum]
+----
+<dependency>
+    <groupId>org.apache.cxf</groupId>
+    <artifactId>cxf-rt-transports-http-jetty</artifactId>
+    <version>${project.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-beans</artifactId>
+    <version>6.1.11</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-context</artifactId>
+    <version>6.1.11</version>
+</dependency>
+<dependency>
+    <groupId>org.eclipse.jetty.http2</groupId>
+    <artifactId>jetty-http2-server</artifactId>
+    <version>${cxf.jetty12.version}</version>
+</dependency>
 ----
 
 Reusing Adoptium Eclipse Temurin 21 LTS, we pass the following arguments to the JVMs:
 
 [,bash,linenum]
 ----
-$mvn -Pserver -Dhost=0.0.0.0 -Dprotocol=http -DBUScfg=client.xml
+$mvn -Pserver -Dhost=0.0.0.0 -Dprotocol=http -Dcfg=client.xml
 ----
 [,bash,linenum]
 ----
-$mvn -Pclient -Dhost=192.168.50.154 -Dprotocol=http -Doperation=echoComplexTypeDoc -Dthreads=100 -Dtime=28800 -DBUScfg=server.xml
+$mvn -Pclient -Dhost=192.168.50.154 -Dprotocol=http -Doperation=echoComplexTypeDoc -Dthreads=100 -Dtime=28800 -Dcfg=server.xml
 ----
 
-== Conclusion
+When the server side starts up, we'll observe h2c in the logging.
+[,bash,linenum]
+----
+INFO: Started ServerConnector@9f73b40{HTTP/1.1, (http/1.1, h2c)}{localhost:8080}
+----
+
+== Results and Conclusion
+
+Lets recap:
+[cols("1","1","1","1")]
+|===
+| Iteration |JVM | Throughput (invocations/sec) | Total Invocations in  8 Hours
+
+| 1
+| Adoptium 17
+| 331.0
+| 953,428,857
+
+| 2
+| Adoptium 21
+| ???
+| ???
+
+| 3
+| Adoptium 21
+| ???
+| ???
+
+|===
 
 
 

@@ -1,7 +1,7 @@
 # Apache CXF SOAP Performance
 
-You know what would be fun? Running 1 Billion soap invocations through
-CXF!
+You know what would be fun? Attempting to run 1 Billion soap invocations
+through CXF in 8 hours!
 
 # The Setup
 
@@ -67,6 +67,11 @@ this folder we’ll build the base harness and the various scenarios.
 On each host we will open a terminal to the CXF distribution samples
 folder.
 
+We’ll ensure we have JAVA_HOME and MAVEN_HOME environment variables set.
+
+For our first run we’ll use Adoptium Eclipse Temurin 17 LTS as Client
+and Server side JVM.
+
 ``` bash
 $ cd samples
 $ mvn clean install
@@ -91,17 +96,138 @@ $mvn -Pclient -Dhost=192.168.50.154 -Dprotocol=http -Doperation=echoComplexTypeD
 For the purposes of our lab test, we’ll allow the suite to execute
 without added agents to the JVM.
 
-# Results
+# LAB TIME!
+
+Our first iteration of this test resulted in 953,428,857 invocations in
+8 hours…​ 47 Million less than our goal of 1 Billion.
+
+``` bash
+=============Overall Test Result============
+Overall Throughput: echoComplexTypeDoc 331.05150369031566 (invocations/sec)
+Overall AVG. response time: 3.0206780179299737 (ms)
+9.53428857E8 (invocations), running 2880001.5900000003 (sec)
+============================================
+```
+
+On our second run we re-configure our JAVA_HOME to use Adoptium Eclipse
+Temurin 21 LTS and pass in the following arguments to the JVMs:
+
+``` bash
+$mvn -Pserver -Dhost=0.0.0.0 -Dprotocol=http
+```
+
+``` bash
+$mvn -Pclient -Dhost=192.168.50.154 -Dprotocol=http -Doperation=echoComplexTypeDoc -Dthreads=100 -Dtime=28800
+```
+
+This resulted in:
 
 ``` bash
 =============Overall Test Result============
 Overall Throughput: echoComplexTypeDoc ??? (invocations/sec)
 Overall AVG. response time: ??? (ms)
-??? (invocations), running 2880000 (sec)
+??? (invocations), running ??? (sec)
 ============================================
 ```
 
-# Conclusion
+The first two test iterations used default CXF and JVM properties. On
+our third run lets pass in a simple CXF configuration to Client and
+Server JVMs to instruct them enable HTTP2 & AsyncHTTPConduit.
+
+client.xml
+
+``` xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:cxf="http://cxf.apache.org/core"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://cxf.apache.org/core
+    http://cxf.apache.org/schemas/core.xsd
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <cxf:bus>
+        <cxf:properties>
+            <entry key="use.async.http.conduit" value="true"/>
+            <entry key="org.apache.cxf.transports.http2.enabled" value="true"/>
+        </cxf:properties>
+    </cxf:bus>
+
+</beans>
+```
+
+server.xml
+
+``` xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:cxf="http://cxf.apache.org/core"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://cxf.apache.org/core
+    http://cxf.apache.org/schemas/core.xsd
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <cxf:bus>
+        <cxf:properties>
+            <entry key="use.async.http.conduit" value="true"/>
+            <entry key="org.apache.cxf.transports.http2.enabled" value="true"/>
+        </cxf:properties>
+    </cxf:bus>
+
+</beans>
+```
+
+Before we can execute this iteration, we’ll need to update the pom.xml
+to include a few more dependencies:
+
+``` xml
+<dependency>
+    <groupId>org.apache.cxf</groupId>
+    <artifactId>cxf-rt-transports-http-jetty</artifactId>
+    <version>${project.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-beans</artifactId>
+    <version>6.1.11</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-context</artifactId>
+    <version>6.1.11</version>
+</dependency>
+<dependency>
+    <groupId>org.eclipse.jetty.http2</groupId>
+    <artifactId>jetty-http2-server</artifactId>
+    <version>${cxf.jetty12.version}</version>
+</dependency>
+```
+
+Reusing Adoptium Eclipse Temurin 21 LTS, we pass the following arguments
+to the JVMs:
+
+``` bash
+$mvn -Pserver -Dhost=0.0.0.0 -Dprotocol=http -Dcfg=client.xml
+```
+
+``` bash
+$mvn -Pclient -Dhost=192.168.50.154 -Dprotocol=http -Doperation=echoComplexTypeDoc -Dthreads=100 -Dtime=28800 -Dcfg=server.xml
+```
+
+When the server side starts up, we’ll observe h2c in the logging.
+
+``` bash
+INFO: Started ServerConnector@9f73b40{HTTP/1.1, (http/1.1, h2c)}{localhost:8080}
+```
+
+# Results and Conclusion
+
+Lets recap:
+
+| Iteration | JVM | Throughput (invocations/sec) | Total Invocations in 8 Hours |
+|----|----|----|----|
+| 1 | Adoptium 17 | 331.0 | 953,428,857 |
+| 2 | Adoptium 21 | ??? | ??? |
+| 3 | Adoptium 21 | ??? | ??? |
 
 # About the Authors
 
