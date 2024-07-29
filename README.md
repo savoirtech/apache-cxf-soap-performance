@@ -128,9 +128,9 @@ This resulted in:
 
 ``` bash
 =============Overall Test Result============
-Overall Throughput: echoComplexTypeDoc ??? (invocations/sec)
-Overall AVG. response time: ??? (ms)
-??? (invocations), running ??? (sec)
+Overall Throughput: echoComplexTypeDoc 320.70739201496815 (invocations/sec)
+Overall AVG. response time: 3.118107112271761 (ms)
+9.23639228E8 (invocations), running 2880006.0459999987 (sec)
 ============================================
 ```
 
@@ -232,7 +232,7 @@ Lets recap:
 | Iteration | JVM | Throughput (invocations/sec) | Total Invocations in 8 Hours |
 |----|----|----|----|
 | 1 | Adoptium 17 | 331.0 | 953,428,857 |
-| 2 | Adoptium 21 | ??? | ??? |
+| 2 | Adoptium 21 | 320.7 | 923,639,228 |
 | 3 | Adoptium 21 | ??? | ??? |
 
 # About the Authors
