@@ -281,7 +281,7 @@ For this run we return to Java 17, and switch our Xmx setting to 100GB.
 The extra heap space may help reduce runtime GC.
 
 ``` bash
-echo $MAVEN_OPTS -Xms32m -Xmx102400m -Dmaven.artifact.threads=5
+MAVEN_OPTS="-Xms32m -Xmx102400m -Dmaven.artifact.threads=5"
 ```
 
 ``` bash
