@@ -296,9 +296,9 @@ This resulted in:
 
 ``` bash
 =============Overall Test Result============
-Overall Throughput: echoComplexTypeDoc ??? (invocations/sec)
-Overall AVG. response time: ??? (ms)
-??? (invocations), running ??? (sec)
+Overall Throughput: echoComplexTypeDoc 334.5341555307743 (invocations/sec)
+Overall AVG. response time: 2.9892313937672315 (ms)
+9.63461638E8 (invocations), running 2880009.7749999994 (sec)
 ============================================
 ```
 
@@ -311,7 +311,7 @@ Lets recap:
 | 1 | Adoptium 17 | 331.0 | 953,428,857 | Default Bus, and an 8GB heap. |
 | 2 | Adoptium 21 | 320.7 | 923,639,228 | Default Bus, and an 8GB heap. |
 | 3 | Adoptium 21 | 320.8 | 924,006,644 | HTTP2 enabled, and an 8GB heap. |
-| 4 | Adoptium 17 | ??? | ??? | Default Bus, and a 100GB heap. |
+| 4 | Adoptium 17 | 334.5 | 963,461,638 | Default Bus, and a 100GB heap. |
 
 # About the Authors
 

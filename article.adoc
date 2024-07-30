@@ -279,9 +279,9 @@ This resulted in:
 [,bash,linenum]
 ----
 =============Overall Test Result============
-Overall Throughput: echoComplexTypeDoc ??? (invocations/sec)
-Overall AVG. response time: ??? (ms)
-??? (invocations), running ??? (sec)
+Overall Throughput: echoComplexTypeDoc 334.5341555307743 (invocations/sec)
+Overall AVG. response time: 2.9892313937672315 (ms)
+9.63461638E8 (invocations), running 2880009.7749999994 (sec)
 ============================================
 ----
 
@@ -312,8 +312,8 @@ Lets recap:
 
 | 4
 | Adoptium 17
-| ???
-| ???
+| 334.5
+| 963,461,638
 | Default Bus, and a 100GB heap.
 
 |===
