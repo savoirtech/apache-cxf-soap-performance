@@ -103,6 +103,12 @@ We’ll ensure we have JAVA_HOME and MAVEN_HOME environment variables set.
 For our first run we’ll use Adoptium Eclipse Temurin 17 LTS as Client
 and Server side JVM.
 
+We set our Heap size to 8GB.
+
+``` bash
+MAVEN_OPTS="-Xms32m -Xmx8192m -Dmaven.artifact.threads=5"
+```
+
 ``` bash
 $ cd samples
 $ mvn clean install
@@ -266,15 +272,46 @@ Overall AVG. response time: 3.116875372813878 (ms)
 ============================================
 ```
 
+## *Fourth Run*
+
+We do not appear to be achieving the theoretical velocity our quick
+tests suggested, lets see if GC is our bottleneck.
+
+For this run we return to Java 17, and switch our Xmx setting to 100GB.
+The extra heap space may help reduce runtime GC.
+
+``` bash
+echo $MAVEN_OPTS -Xms32m -Xmx102400m -Dmaven.artifact.threads=5
+```
+
+``` bash
+$mvn -Pserver -Dhost=0.0.0.0 -Dprotocol=http
+```
+
+``` bash
+$mvn mvn -Pclient -Dhost=192.168.50.154 -Dprotocol=http -Doperation=echoComplexTypeDoc -Dthreads=100 -Dtime=28800
+```
+
+This resulted in:
+
+``` bash
+=============Overall Test Result============
+Overall Throughput: echoComplexTypeDoc ??? (invocations/sec)
+Overall AVG. response time: ??? (ms)
+??? (invocations), running ??? (sec)
+============================================
+```
+
 # Results and Conclusion
 
 Lets recap:
 
 | Iteration | JVM | Throughput (invocations/sec) | Total Invocations in 8 Hours | Notes |
 |----|----|----|----|----|
-| 1 | Adoptium 17 | 331.0 | 953,428,857 | Default Bus |
-| 2 | Adoptium 21 | 320.7 | 923,639,228 | Default Bus |
-| 3 | Adoptium 21 | 320.8 | 924,006,644 | HTTP2 enabled |
+| 1 | Adoptium 17 | 331.0 | 953,428,857 | Default Bus, and an 8GB heap. |
+| 2 | Adoptium 21 | 320.7 | 923,639,228 | Default Bus, and an 8GB heap. |
+| 3 | Adoptium 21 | 320.8 | 924,006,644 | HTTP2 enabled, and an 8GB heap. |
+| 4 | Adoptium 17 | ??? | ??? | Default Bus, and a 100GB heap. |
 
 # About the Authors
 
