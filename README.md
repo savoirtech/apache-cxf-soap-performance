@@ -59,6 +59,37 @@ of time.
 Once the time duration has been met, it will cease the executing
 clients, and tabulate the total invocations.
 
+# Theory Time!
+
+Given our goal of achieving 1 Billion invocations in an eight hour
+period, lets take a look at what velocity our clients will need to
+maintain to collectively reach our goal line. Before setting up a full
+testing run, we run a 60 second quick test to see what throughput we
+might expect to see on our lab hardware.
+
+| Clients | Invocations/Second | Quick Test |
+|---------|--------------------|------------|
+| 1       | 34722.2            | 1486.87    |
+| 8       | 4340.27            | 1429.85    |
+| 16      | 2170.14            | 1153.35    |
+| 32      | 1085.07            | 911.17     |
+| 64      | 542.53             | 523.5      |
+| 100     | 347.2              | 347.6      |
+| 128     | 271.27             | 269.02     |
+
+As the above table illustrates, we either need to have each client
+running at a high velocity OR run many clients at a lower velocity to
+reach our goal line.
+
+Its clear that a single threaded client is not going to achieve our
+throughput.
+
+Its also clear that as the number of threads increase, the throughput
+per thread decreases on this system.
+
+The trend line suggests that a setting nearing 100 would be our best bet
+for extended testing.
+
 # Lets get this test case running
 
 To run the performance harness we change directory into samples. Within
