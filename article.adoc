@@ -192,27 +192,40 @@ When the server side starts up, we'll observe h2c in the logging.
 INFO: Started ServerConnector@9f73b40{HTTP/1.1, (http/1.1, h2c)}{localhost:8080}
 ----
 
+This resulted in:
+[,bash,linenum]
+----
+=============Overall Test Result============
+Overall Throughput: echoComplexTypeDoc 320.834130463552 (invocations/sec)
+Overall AVG. response time: 3.116875372813878 (ms)
+9.24006644E8 (invocations), running 2880013.553 (sec)
+============================================
+----
+
 == Results and Conclusion
 
 Lets recap:
-[cols("1","1","1","1")]
+[cols("1","1","1","1","1")]
 |===
-| Iteration |JVM | Throughput (invocations/sec) | Total Invocations in  8 Hours
+| Iteration |JVM | Throughput (invocations/sec) | Total Invocations in  8 Hours | Notes
 
 | 1
 | Adoptium 17
 | 331.0
 | 953,428,857
+| Default Bus
 
 | 2
 | Adoptium 21
 | 320.7
 | 923,639,228
+| Default Bus
 
 | 3
 | Adoptium 21
-| ???
-| ???
+| 320.8
+| 924,006,644
+| HTTP2 enabled
 
 |===
 
