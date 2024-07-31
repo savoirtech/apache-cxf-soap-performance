@@ -324,9 +324,9 @@ This resulted in:
 
 ``` bash
 =============Overall Test Result============
-Overall Throughput: echoComplexTypeDoc ??? (invocations/sec)
-Overall AVG. response time: ??? (ms)
-??? (invocations), running ??? (sec)
+Overall Throughput: echoComplexTypeDoc 345.9386518961459 (invocations/sec)
+Overall AVG. response time: 2.890685948270994 (ms)
+9.96304924E8 (invocations), running 2880004.644000001 (sec)
 ============================================
 ```
 
@@ -344,7 +344,7 @@ below.
 | 2 | Adoptium 21 | 320.7 | 923,639,228 | Default Bus, Client & Server 8GB heap. |
 | 3 | Adoptium 21 | 320.8 | 924,006,644 | HTTP2 enabled, Client & Server 8GB heap. |
 | 4 | Adoptium 17 | 334.5 | 963,461,638 | Default Bus, Client 100GB heap, Server 8GB heap. |
-| 5 | Adoptium 17 | ??? | ??? | Default Bus, Client and Server side JVM tuning. |
+| 5 | Adoptium 17 | 345.9 | 996,304,924 | Default Bus, Client and Server side JVM tuning. |
 
 Our calculations suggested that 100 client threads could achieve 1
 Billion invocations in 8 hours on our lab hardware. Testing data however

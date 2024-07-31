@@ -307,9 +307,9 @@ This resulted in:
 [,bash,linenum]
 ----
 =============Overall Test Result============
-Overall Throughput: echoComplexTypeDoc ??? (invocations/sec)
-Overall AVG. response time: ??? (ms)
-??? (invocations), running ??? (sec)
+Overall Throughput: echoComplexTypeDoc 345.9386518961459 (invocations/sec)
+Overall AVG. response time: 2.890685948270994 (ms)
+9.96304924E8 (invocations), running 2880004.644000001 (sec)
 ============================================
 ----
 
@@ -349,8 +349,8 @@ Our aim is to meet or exceed 347.2 invocations per second on average over a time
 
 | 5
 | Adoptium 17
-| ???
-| ???
+| 345.9
+| 996,304,924
 | Default Bus, Client and Server side JVM tuning.
 
 |===
