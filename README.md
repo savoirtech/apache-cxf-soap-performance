@@ -277,8 +277,8 @@ Overall AVG. response time: 3.116875372813878 (ms)
 We do not appear to be achieving the theoretical velocity our quick
 tests suggested, lets see if GC is our bottleneck.
 
-For this run we return to Java 17, and switch our Xmx setting to 100GB.
-The extra heap space may help reduce runtime GC.
+For this run we return to Java 17, and switch our Client Xmx setting to
+100GB. The extra heap space may help reduce runtime GC.
 
 ``` bash
 MAVEN_OPTS="-Xms32m -Xmx102400m -Dmaven.artifact.threads=5"
@@ -302,16 +302,54 @@ Overall AVG. response time: 2.9892313937672315 (ms)
 ============================================
 ```
 
+## *Fifth Run*
+
+Time for more JVM tuning. This time we’ll reduce memory resizing by
+equalizing XMS and XMX settings, and relax G1GC soft limits. These
+settings will be placed on Client and Server side.
+
+``` bash
+MAVEN_OPTS="-Xms102400m -Xmx102400m -Dmaven.artifact.threads=5 -XX:MaxGCPauseMillis=400 -XX:+ParallelRefProcEnabled"
+```
+
+``` bash
+$mvn -Pserver -Dhost=0.0.0.0 -Dprotocol=http
+```
+
+``` bash
+$mvn mvn -Pclient -Dhost=192.168.50.154 -Dprotocol=http -Doperation=echoComplexTypeDoc -Dthreads=100 -Dtime=28800
+```
+
+This resulted in:
+
+``` bash
+=============Overall Test Result============
+Overall Throughput: echoComplexTypeDoc ??? (invocations/sec)
+Overall AVG. response time: ??? (ms)
+??? (invocations), running ??? (sec)
+============================================
+```
+
 # Results and Conclusion
 
 Lets recap:
 
+Our aim is to meet or exceed 347.2 invocations per second on average
+over a time of 8 hours. Each of our test iterations are summarized
+below.
+
 | Iteration | JVM | Throughput (invocations/sec) | Total Invocations in 8 Hours | Notes |
 |----|----|----|----|----|
-| 1 | Adoptium 17 | 331.0 | 953,428,857 | Default Bus, and an 8GB heap. |
-| 2 | Adoptium 21 | 320.7 | 923,639,228 | Default Bus, and an 8GB heap. |
-| 3 | Adoptium 21 | 320.8 | 924,006,644 | HTTP2 enabled, and an 8GB heap. |
-| 4 | Adoptium 17 | 334.5 | 963,461,638 | Default Bus, and a 100GB heap. |
+| 1 | Adoptium 17 | 331.0 | 953,428,857 | Default Bus, Client & Server 8GB heap. |
+| 2 | Adoptium 21 | 320.7 | 923,639,228 | Default Bus, Client & Server 8GB heap. |
+| 3 | Adoptium 21 | 320.8 | 924,006,644 | HTTP2 enabled, Client & Server 8GB heap. |
+| 4 | Adoptium 17 | 334.5 | 963,461,638 | Default Bus, Client 100GB heap, Server 8GB heap. |
+| 5 | Adoptium 17 | ??? | ??? | Default Bus, Client and Server side JVM tuning. |
+
+Our calculations suggested that 100 client threads could achieve 1
+Billion invocations in 8 hours on our lab hardware. Testing data however
+shows that over time our initial rates slow down, missing our objective
+by 5 to 8%. Surprisingly, Java 21 fared poorer than Java 17 runs.
 
 # About the Authors
 
