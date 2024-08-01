@@ -360,9 +360,9 @@ Overall AVG. response time: 2.884973219242145 (ms)
 
 Lets recap:
 
-Our aim is to meet or exceed 347.2 invocations per second on average
-over a time of 8 hours. Each of our test iterations are summarized
-below.
+Our aim is to meet or exceed 347.2 invocations per second per client on
+average over a time of 8 hours. Each of our test iterations are
+summarized below.
 
 | Iteration | JVM | Throughput (invocations/sec) | Total Invocations in 8 Hours | Notes |
 |----|----|----|----|----|
