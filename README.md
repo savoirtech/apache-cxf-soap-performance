@@ -21,7 +21,7 @@ For our lab test we’ll be using the following hardware:
 
 - Raptor Blackbird (Server Host)
 
-  - POWER9 (8c, 32 t)
+  - IBM POWER9 v2 SMT4 Sforza (8c, 32 t)
 
   - 128 GB DDR4 RAM
 
