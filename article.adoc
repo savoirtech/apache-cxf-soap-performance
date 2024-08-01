@@ -41,7 +41,7 @@ Given our goal of achieving 1 Billion invocations in an eight hour period, lets 
 
 [cols("1","1")]
 |===
-| Clients | Target Invocations/Second | Quick Test (Reality)
+| Clients | Target Invocations/Second per client | Quick Test (Reality) per client
 
 | 1
 | 34722.2

@@ -67,15 +67,15 @@ maintain to collectively reach our goal line. Before setting up a full
 testing run, we run a 60 second quick test to see what throughput we
 might expect to see on our lab hardware.
 
-| Clients | Target Invocations/Second | Quick Test (Reality) |
-|---------|---------------------------|----------------------|
-| 1       | 34722.2                   | 1486.87              |
-| 8       | 4340.27                   | 1429.85              |
-| 16      | 2170.14                   | 1153.35              |
-| 32      | 1085.07                   | 911.17               |
-| 64      | 542.53                    | 523.5                |
-| 100     | 347.2                     | 347.6                |
-| 128     | 271.27                    | 269.02               |
+| Clients | Target Invocations/Second per client | Quick Test (Reality) per client |
+|----|----|----|
+| 1 | 34722.2 | 1486.87 |
+| 8 | 4340.27 | 1429.85 |
+| 16 | 2170.14 | 1153.35 |
+| 32 | 1085.07 | 911.17 |
+| 64 | 542.53 | 523.5 |
+| 100 | 347.2 | 347.6 |
+| 128 | 271.27 | 269.02 |
 
 As the above table illustrates, we either need to have each client
 running at a high velocity OR run many clients at a lower velocity to
