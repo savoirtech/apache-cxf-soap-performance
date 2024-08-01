@@ -393,6 +393,9 @@ Our aim is to meet or exceed 347.2 invocations per second on average over a time
 
 Our calculations suggested that 100 client threads could achieve 1 Billion invocations in 8 hours on our lab hardware. Testing data however shows that over time our initial rates slow down, missing our objective by 5 to 8%. Surprisingly, Java 21 fared poorer than Java 17 runs.
 
+When we began providing additional heap space to Client & Server, relaxing Max GC pause times, our throughput improved.
+
+
 == About the Authors
 
 link:https://github.com/savoirtech/blogs/blob/main/authors/JamieGoodyear.md[Jamie Goodyear]

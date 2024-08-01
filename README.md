@@ -332,9 +332,7 @@ Overall AVG. response time: 2.890685948270994 (ms)
 
 ## *Sixth Run*
 
-Time for more JVM tuning. This time we’ll reduce memory resizing by
-equalizing XMS and XMX settings, and relax G1GC soft limits. These
-settings will be placed on Client and Server side.
+Extend GC timing by 100ms.
 
 ``` bash
 MAVEN_OPTS="-Xms102400m -Xmx102400m -Dmaven.artifact.threads=5 -XX:MaxGCPauseMillis=500 -XX:+ParallelRefProcEnabled"
@@ -379,6 +377,9 @@ Our calculations suggested that 100 client threads could achieve 1
 Billion invocations in 8 hours on our lab hardware. Testing data however
 shows that over time our initial rates slow down, missing our objective
 by 5 to 8%. Surprisingly, Java 21 fared poorer than Java 17 runs.
+
+When we began providing additional heap space to Client & Server,
+relaxing Max GC pause times, our throughput improved.
 
 # About the Authors
 
