@@ -74,7 +74,7 @@ might expect to see on our lab hardware.
 | 16 | 2170.14 | 1153.35 |
 | 32 | 1085.07 | 911.17 |
 | 64 | 542.53 | 523.5 |
-| 100 | 347.2 | 347.6 |
+| **100** | ***347.2*** | ***347.6*** |
 | 128 | 271.27 | 269.02 |
 
 As the above table illustrates, we either need to have each client
