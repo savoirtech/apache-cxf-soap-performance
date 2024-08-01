@@ -330,6 +330,34 @@ Overall AVG. response time: 2.890685948270994 (ms)
 ============================================
 ```
 
+## *Sixth Run*
+
+Time for more JVM tuning. This time we’ll reduce memory resizing by
+equalizing XMS and XMX settings, and relax G1GC soft limits. These
+settings will be placed on Client and Server side.
+
+``` bash
+MAVEN_OPTS="-Xms102400m -Xmx102400m -Dmaven.artifact.threads=5 -XX:MaxGCPauseMillis=500 -XX:+ParallelRefProcEnabled"
+```
+
+``` bash
+$mvn -Pserver -Dhost=0.0.0.0 -Dprotocol=http
+```
+
+``` bash
+$mvn mvn -Pclient -Dhost=192.168.50.154 -Dprotocol=http -Doperation=echoComplexTypeDoc -Dthreads=100 -Dtime=28800
+```
+
+This resulted in:
+
+``` bash
+=============Overall Test Result============
+Overall Throughput: echoComplexTypeDoc 346.62366823033824 (invocations/sec)
+Overall AVG. response time: 2.884973219242145 (ms)
+9.98279255E8 (invocations), running 2880008.9159999997 (sec)
+============================================
+```
+
 # Results and Conclusion
 
 Lets recap:
@@ -345,6 +373,7 @@ below.
 | 3 | Adoptium 21 | 320.8 | 924,006,644 | HTTP2 enabled, Client & Server 8GB heap. |
 | 4 | Adoptium 17 | 334.5 | 963,461,638 | Default Bus, Client 100GB heap, Server 8GB heap. |
 | 5 | Adoptium 17 | 345.9 | 996,304,924 | Default Bus, Client and Server side JVM tuning. |
+| 6 | Adoptium 17 | 346.6 | 998,279,255 | 100ms more lax GC than run 5. |
 
 Our calculations suggested that 100 client threads could achieve 1
 Billion invocations in 8 hours on our lab hardware. Testing data however

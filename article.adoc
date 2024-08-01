@@ -313,6 +313,36 @@ Overall AVG. response time: 2.890685948270994 (ms)
 ============================================
 ----
 
+=== _Sixth Run_
+
+Extend GC timing by 100ms.
+
+[,bash,linenum]
+----
+MAVEN_OPTS="-Xms102400m -Xmx102400m -Dmaven.artifact.threads=5 -XX:MaxGCPauseMillis=500 -XX:+ParallelRefProcEnabled"
+----
+
+[,bash,linenum]
+----
+$mvn -Pserver -Dhost=0.0.0.0 -Dprotocol=http
+----
+[,bash,linenum]
+----
+$mvn mvn -Pclient -Dhost=192.168.50.154 -Dprotocol=http -Doperation=echoComplexTypeDoc -Dthreads=100 -Dtime=28800
+----
+
+This resulted in:
+[,bash,linenum]
+----
+=============Overall Test Result============
+Overall Throughput: echoComplexTypeDoc 346.62366823033824 (invocations/sec)
+Overall AVG. response time: 2.884973219242145 (ms)
+9.98279255E8 (invocations), running 2880008.9159999997 (sec)
+============================================
+----
+
+
+
 == Results and Conclusion
 
 Lets recap:
@@ -352,6 +382,12 @@ Our aim is to meet or exceed 347.2 invocations per second on average over a time
 | 345.9
 | 996,304,924
 | Default Bus, Client and Server side JVM tuning.
+
+| 6
+| Adoptium 17
+| 346.6
+| 998,279,255
+| 100ms more lax GC than run 5.
 
 |===
 
