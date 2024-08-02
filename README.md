@@ -19,6 +19,8 @@ For our lab test we’ll be using the following hardware:
 
   - 1 Gigabit Ethernet
 
+  - Ubuntu 22.04 LTS
+
 - Raptor Blackbird (Server Host)
 
   - IBM POWER9 v2 SMT4 Sforza (8c, 32 t)
@@ -26,6 +28,8 @@ For our lab test we’ll be using the following hardware:
   - 128 GB DDR4 RAM
 
   - 1 Gigabit Ethernet
+
+  - CentOS Stream 9
 
 The machines are co-located on the same switch, reducing the number of
 packet hops.
