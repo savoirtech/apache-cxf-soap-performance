@@ -356,6 +356,32 @@ Overall AVG. response time: 2.884973219242145 (ms)
 ============================================
 ```
 
+## *Seventh Run*
+
+Extend GC timing by 100ms, and an extra 10 GB on the Heap.
+
+``` bash
+MAVEN_OPTS="-Xms112640m -Xmx112640m -Dmaven.artifact.threads=5 -XX:MaxGCPauseMillis=600 -XX:+ParallelRefProcEnabled"
+```
+
+``` bash
+$mvn -Pserver -Dhost=0.0.0.0 -Dprotocol=http
+```
+
+``` bash
+$mvn mvn -Pclient -Dhost=192.168.50.154 -Dprotocol=http -Doperation=echoComplexTypeDoc -Dthreads=100 -Dtime=28800
+```
+
+This resulted in:
+
+``` bash
+=============Overall Test Result============
+Overall Throughput: echoComplexTypeDoc 348.5338799400768 (invocations/sec)
+Overall AVG. response time: 2.86916152935241 (ms)
+1.003791036E9 (invocations), running 2880038.624 (sec)
+============================================
+```
+
 # Results and Conclusion
 
 Lets recap:
@@ -372,6 +398,7 @@ summarized below.
 | 4 | Adoptium 17 | 334.5 | 963,461,638 | Default Bus, Client 100GB heap, Server 8GB heap. |
 | 5 | Adoptium 17 | 345.9 | 996,304,924 | Default Bus, Client and Server side JVM tuning. |
 | 6 | Adoptium 17 | 346.6 | 998,279,255 | 100ms more lax GC than run 5. |
+| 7 | Adoptium 17 | ***348.5*** | ***1,003,791,036*** | 200ms more lax GC than run 5. 110GB heaps! |
 
 Our calculations suggested that 100 client threads could achieve 1
 Billion invocations in 8 hours on our lab hardware. Testing data however
@@ -380,6 +407,23 @@ by 5 to 8%. Surprisingly, Java 21 fared poorer than Java 17 runs.
 
 When we began providing additional heap space to Client & Server,
 relaxing Max GC pause times, our throughput improved.
+
+On our seventh iteration we achieved our goal! The key to success was
+ensuring GC pause times was kept to minimum.
+
+## Future Considerations
+
+Now that we’ve established the system can handle 1 Billion invocations
+in an 8-hour period we can consider how to do so while using less
+resources.
+
+- Smaller Heap
+
+- G1GC more tuning
+
+- ZGC w/ tuning
+
+- Retest Java 21 with iteration 7’s settings.
 
 # About the Authors
 

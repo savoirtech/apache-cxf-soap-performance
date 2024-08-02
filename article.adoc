@@ -341,7 +341,33 @@ Overall AVG. response time: 2.884973219242145 (ms)
 ============================================
 ----
 
+=== _Seventh Run_
 
+Extend GC timing by 100ms, and an extra 10 GB on the Heap.
+
+[,bash,linenum]
+----
+MAVEN_OPTS="-Xms112640m -Xmx112640m -Dmaven.artifact.threads=5 -XX:MaxGCPauseMillis=600 -XX:+ParallelRefProcEnabled"
+----
+
+[,bash,linenum]
+----
+$mvn -Pserver -Dhost=0.0.0.0 -Dprotocol=http
+----
+[,bash,linenum]
+----
+$mvn mvn -Pclient -Dhost=192.168.50.154 -Dprotocol=http -Doperation=echoComplexTypeDoc -Dthreads=100 -Dtime=28800
+----
+
+This resulted in:
+[,bash,linenum]
+----
+=============Overall Test Result============
+Overall Throughput: echoComplexTypeDoc 348.5338799400768 (invocations/sec)
+Overall AVG. response time: 2.86916152935241 (ms)
+1.003791036E9 (invocations), running 2880038.624 (sec)
+============================================
+----
 
 == Results and Conclusion
 
@@ -389,12 +415,28 @@ Our aim is to meet or exceed 347.2 invocations per second per client on average 
 | 998,279,255
 | 100ms more lax GC than run 5.
 
+| 7
+| Adoptium 17
+| *_348.5_*
+| *_1,003,791,036_*
+| 200ms more lax GC than run 5. 110GB heaps!
+
 |===
 
 Our calculations suggested that 100 client threads could achieve 1 Billion invocations in 8 hours on our lab hardware. Testing data however shows that over time our initial rates slow down, missing our objective by 5 to 8%. Surprisingly, Java 21 fared poorer than Java 17 runs.
 
 When we began providing additional heap space to Client & Server, relaxing Max GC pause times, our throughput improved.
 
+On our seventh iteration we achieved our goal! The key to success was ensuring GC pause times was kept to minimum.
+
+=== Future Considerations
+
+Now that we've established the system can handle 1 Billion invocations in an 8-hour period we can consider how to do so while using less resources.
+
+* Smaller Heap
+* G1GC more tuning
+* ZGC w/ tuning
+* Retest Java 21 with iteration 7's settings.
 
 == About the Authors
 
