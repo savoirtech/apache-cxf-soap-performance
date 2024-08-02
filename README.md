@@ -411,6 +411,18 @@ relaxing Max GC pause times, our throughput improved.
 On our seventh iteration we achieved our goal! The key to success was
 ensuring GC pause times was kept to minimum.
 
+## Interesting Notes
+
+During seventh test iteration *zero* client or server side errors were
+recorded.
+
+<figure>
+<img src="./assets/images/NetworkStats.png" alt="Perf" />
+</figure>
+
+During the iteration approximately 2 TiB (~275 GB) of data was
+transferred between client and server.
+
 ## Future Considerations
 
 Now that we’ve established the system can handle 1 Billion invocations

@@ -429,6 +429,14 @@ When we began providing additional heap space to Client & Server, relaxing Max G
 
 On our seventh iteration we achieved our goal! The key to success was ensuring GC pause times was kept to minimum.
 
+=== Interesting Notes
+
+During seventh test iteration _zero_ client or server side errors were recorded.
+
+image::./assets/images/NetworkStats.png[alt=Perf,width=480,height=640,align="center"]
+
+During the iteration approximately 2 TiB (~275 GB) of data was transferred between client and server.
+
 === Future Considerations
 
 Now that we've established the system can handle 1 Billion invocations in an 8-hour period we can consider how to do so while using less resources.
